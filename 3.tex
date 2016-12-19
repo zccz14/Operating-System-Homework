@@ -1,0 +1,170 @@
+%\chapter{Process Synchronization}
+\chapter*{Homework 3}
+\begin{enumerate}
+    \item [6.4] Explain why spinlocks are not appropriate for single-processor systems yet are often used in multiprocessor systems.
+    
+    Spinlock, which is a kind of busy-waiting lock, costs a single processor to check lock constantly. In single-processor systems, there's no more processor to do other tasks. Spinlock is a simple and quick method. In multiprocessor systems, there're idle processors can be used for spinlocks.
+    
+    \item [6.9] Show that, if the wait() and signal() semaphore operations are not executed atomically, then mutual exclusion may be violated.
+    
+    Take wait() for example, wait() opeartions check the semaphore if its value is positive, and then decrease it. If wait() operations are not executed atomically, there may be many processes call wait() and check the positive semaphore together, and then decrease it without after checking, which cause too many processes went into critical section.
+    
+    \item [6.11] The Sleeping-Barber Problem. A barbershop consists of a waiting room with n chairs and abarber room with one barber chair. If there are no customers to be served, the barber goes to sleep. If a customer enters the barbershop and all chairs are occupied, then the customer leaves the shop. If the barber is busy but chairs are available, the customer sits in one of the free chairs. If the barber is asleep, the customer wakes up the barber. Write a program to coordinate the barber and the customers.
+    
+    \lstinputlisting[language=java, caption={SleepingBarberProblem.java}]{code/SleepingBarberProblem.java}
+    
+    \item There is a kind of definition of P, V operation:
+    
+    \lstinputlisting[numbers=none, caption={PV Definition}]{code/PV6_1.txt}
+    
+    \begin{enumerate}
+        \item Is there a problem with the above definition of P, V operation?
+        
+        Yes, it is \textbf{starvation}. The waiting queue is actually a stack. 
+    
+        \item Implement a mutual exclusion mechanism, under which N process to compete for the use of a shared variable, with the above P, V operation.
+        
+        Set N waiting queue. Assert that the number of processes in each of waiting queue is no more than 1. In this case, the waiting queue performs as FIFO queue.
+        
+    \end{enumerate}
+    
+    \item The Second Reader-Writer Problem: Writer First
+    
+    \begin{itemize}
+        \item Many reader can read in the same time.
+        \item Writers exclude any others.
+        \item Writers have higher priority than readers. Readers should wait if there is any writers.
+    \end{itemize}
+    
+    Try to use P, V operation to solve this problem.
+    
+    \lstinputlisting[numbers=none, caption={Reader-Writer: Writer First}]{code/PV6_2.txt}
+
+    
+    \item Regard N students and a teacher as processes. People should enter or leave the exam room one by one follow the principle of first come. The teacher should dispatch papers after all the N students entered the room. Student should leave the room after submitted their paper. The teacher should wait for all paper submitted and then leave the room.
+
+    \begin{enumerate}
+        \item How many processes do we need to set?
+        
+        Obviously, N + 1.
+        
+        \item Try to use P, V operation to solve this problem.
+        
+        \lstinputlisting[numbers=none, caption={Exam Room: Teacher and Students}]{code/PV6_3.txt}
+    
+        
+    \end{enumerate}
+\end{enumerate}
+
+%\chapter{Deadlock}
+\begin{enumerate}
+    
+\item [7.1] Consider the traffic deadlock depicted in Figure 7.9.
+    \begin{enumerate}    
+        \item Show that the four necessary conditons for deadlock indeed hold in this example.
+        
+        \begin{enumerate}
+            \item Mutual exclution
+            
+            only one line of cars at a time can use the resource.
+            
+            \item Hold and wait
+            
+            Each line of cars is holding one resource and is waiting for the next resource.
+            
+            \item No preemption
+            
+            the resouce can not be released until the whole line of cars have passed it.
+            
+            \item Circular wait
+            
+            there are 4 lines of cars l1, l2, l3, l4, l1 is waiting for l2, l2 is waiting for l3, l3 is waiting for l4, l4 is waiting for l1.
+
+        \end{enumerate}
+        
+        \item State a simple rule for avoiding deadlocks in this system.
+        
+        There are many approaches to avoid deadlocks in this system. Such as breaking the second condition: \textbf{a line of cars can't hold a cross and wait}.
+        
+    \end{enumerate}
+
+
+\item [7.11] Consider the following snapshot of a system:
+
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+            \hline
+               & \multicolumn{4}{|c|}{Allocation} & \multicolumn{4}{|c|}{Max} & \multicolumn{4}{|c|}{Available}  \\
+            \hline
+               & A & B & C & D & A & B & C & D & A & B & C & D \\
+            \hline
+            P0 & 0 & 0 & 1 & 2 & 0 & 0 & 1 & 2 & 1 & 5 & 2 & 0 \\
+            \hline
+            P1 & 1 & 0 & 0 & 0 & 1 & 7 & 5 & 0 &  &  &  & \\	
+            \hline
+            P2 & 1 & 3 & 5 & 4 & 2 & 3 & 5 & 6 &  &  &  & \\	
+            \hline
+            P3 & 0 & 6 & 3 & 2 & 0 & 6 & 5 & 2 &  &  &  & \\	
+            \hline
+            P4 & 0 & 0 & 1 & 4 & 0 & 6 & 5 & 6 &  &  &  & \\	
+            \hline
+        \end{tabular}
+    \end{center}
+    
+    Answer the following questions using the banker's algorithm:
+    \begin{enumerate}
+        \item What is the content of the matrix Need?
+        
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|}
+                \hline
+                   & \multicolumn{4}{|c|}{Need} \\
+                \hline
+                   & A & B & C & D \\
+                \hline
+                P0 & 0 & 0 & 0 & 0 \\
+                \hline
+                P1 & 0 & 7 & 5 & 0 \\
+                \hline
+                P2 & 1 & 0 & 0 & 2 \\
+                \hline
+                P3 & 0 & 0 & 2 & 0 \\
+                \hline
+                P4 & 0 & 6 & 4 & 2 \\
+                \hline
+            \end{tabular}
+        \end{center}
+        
+        \item Is the system in a safe state?
+        
+        Yes, there are 24 safe paths starting with P3, and 6 safe paths starting with P0. There are 30 safe paths in summary, such as (P3, P0, P1, P2, P5).
+        
+        \item If a request from process P1 arrives for (0,4,2,0), can the request be granted immediately?
+        
+        Yes. After allocation, the available vector is (1, 1, 0, 0), and the need matrix is:
+        
+        \begin{center}
+            \begin{tabular}{|c|c|c|c|c|}
+                \hline
+                   & \multicolumn{4}{|c|}{Need} \\
+                \hline
+                   & A & B & C & D \\
+                \hline
+                P0 & 0 & 0 & 0 & 0 \\
+                \hline
+                P1 & 0 & 3 & 3 & 0 \\
+                \hline
+                P2 & 1 & 0 & 0 & 2 \\
+                \hline
+                P3 & 0 & 0 & 2 & 0 \\
+                \hline
+                P4 & 0 & 6 & 4 & 2 \\
+                \hline
+            \end{tabular}
+        \end{center}
+
+        It's easy to find 3 safe paths: (P0, P2, P1, P3, P4), (P0, P2, P3, P1, P4) and (P0, P2, P3, P4, P1).
+        
+    \end{enumerate}
+
+\end{enumerate}

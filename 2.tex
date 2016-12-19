@@ -1,0 +1,469 @@
+\chapter{Process}
+
+\begin{enumerate}
+    \item Describe the differences among short-term, medium-term, and long-term scheduling.
+
+    The main difference is the "distance" from the CPU to the process, which indicates the names of short-term, medium-term and long-term scheduling.
+    
+    \begin{enumerate}
+        \item Speed
+    
+        Short-term > Medium-term > Long-term
+        
+        the less distance from the CPU to the process, the faster it is.
+        
+        \item Frequency
+        
+        Short-term > Medium-term > Long-term
+        
+        the faster, the more frequent.
+        
+        \item Place
+        
+        Short-term scheduling focus on inside CPU and main memory only (internal devices).
+        
+        Long-term scheduling focus on outside CPU and main memory (external devices).
+        
+        Medium-term scheduling works between internal devices and external devices.
+        
+        \item Others
+        
+        Short-term scheduling only decides which process in the main memory will be processed by CPU.
+        
+        Long-term scheduling only decides which process in the external devices can enter main memory to be processed.
+        
+        Medium-term scheduling considers about if it is necessary to suspend a process to external memory to relief main memory.
+        
+    \end{enumerate}
+    
+    \item Describe the actions taken by a kernel to context-switch between processes. 
+    
+    Saving and loading context.
+
+    \begin{enumerate}
+        \item Saving process segments: text segment, data segment, stack segment and sharing memory.
+        \item Saving register data: PC, PSW, SP, PCBP, ISP, etc.
+        \item Saving virtual memory management data and interrupt stack data.        
+    \end{enumerate}
+    
+    and loading another process's corresponding data from somewhere.
+    
+\end{enumerate}
+
+
+
+\chapter{Thread}
+
+\begin{enumerate}
+    \item Discuss the difference between user-level thread and kernel-level thread.
+    
+    \begin{enumerate}
+        \item Implementation
+        
+        Kernel-level thread is supported by kernel.
+        
+        User-level thread is supported by thread programming library.
+        
+        \item Visibility
+        
+        Kernel knows kernel-level threads, but can notice user-level threads.
+        
+        Kernel takes user-level threads just as a process. 
+        
+        So user-level thread blocking makes the whole process blocking, but kernel-level thread not.
+        
+        And user-level multi-thread can't gain more CPU time slice from kernel, but kernel-level thread can.
+        
+        \item Privilege
+        
+        Operaing(creating, switching and destroying) kernel-level threads needs kernel privileges but it's free about user-level threads.
+        
+        \item Maintainer
+        
+        Kernel-level thread's context is maintained by kernal.
+        
+        User-level thread's context is maintained by user process.
+        
+    \end{enumerate}
+
+
+    \item Which of the following components of program state are shared across threads in a multithreaded process?
+
+    \begin{enumerate}
+        \item Register values
+        
+        \item Heap memory
+        
+        \item Global variables
+        
+        \item Stack memory
+    \end{enumerate}
+
+    b and c
+
+    Heap memory belongs to the whole process runtime.
+    
+    Global variables belong to data segment.
+    
+    Each threads has its own register set and stack.
+    
+    \item The program shown in Figure 4.11 uses the Pthreads API. What would be output from the program at LINE C and LINE P?
+    
+    \lstinputlisting[language=c, caption={Thread.c}]{code/Thread.c}
+    
+    Outputs:
+
+    \begin{lstlisting}
+    CHILD: value=5
+    PARENT: value=0
+    \end{lstlisting}
+    
+\end{enumerate}
+
+
+\chapter{Scheduling}
+
+\begin{enumerate}
+    
+    \item Why is it important for the scheduler to distinguish I/O-bound programs from CPU-bound programs?
+    
+    I/O-bound programs have more I/O bursts and less CPU bursts than CPU-bound programs.
+    
+    Scheduling Criteria:
+    
+    \begin{itemize}
+        \item Max CPU utilization
+        \item Max throughput and concurrency
+        \item Min turnaround time
+        \item Min waiting time
+        \item Min response time
+    \end{itemize}
+    
+    Scheduling dynamic process can improve and optimize these rules.
+    
+    \item Consider the following set of processes, with the length of the CPU burst given in milliseconds
+    
+    \begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        Process & Burst Time & Priority \\
+        \hline
+        P1 & 10 & 3 \\
+        \hline
+        P2 & 1 & 1 \\
+        \hline
+        P3 & 2 & 3 \\
+        \hline
+        P4 & 1 & 4 \\
+        \hline
+        P5 & 5 & 2 \\
+        \hline
+    \end{tabular}
+    \end{center}
+    
+    The processes are assumed to have arrived in the order P1, P2, P3, P4, P5, all at time 0.
+    
+    \begin{enumerate}    
+        \item Draw four Gantt charts that illustrate the execution of these processes using the following scheduling algorithms: FCFS, SJF, nonpreemptive priority (a smaller priority number implies a higher priority), and RR (quantum = 1).
+        
+        \begin{itemize}        
+            \item FCFS:
+            
+            \begin{center}
+            \begin{ganttchart}{1}{19}
+                \gantttitle{Time}{19} \\
+                \gantttitlelist{1,...,19}{1} \\
+                \ganttbar{P1}{1}{10} \\
+                \ganttbar{P2}{11}{11} \\
+                \ganttbar{P3}{12}{13} \\
+                \ganttbar{P4}{14}{14} \\
+                \ganttbar{P5}{15}{19} \\
+            \end{ganttchart}
+            \end{center}
+            
+            \item SJF:
+            
+            \begin{center}
+            \begin{ganttchart}{1}{19}
+                \gantttitle{Time}{19} \\
+                \gantttitlelist{1,...,19}{1} \\
+                \ganttbar{P2}{1}{1} \\
+                \ganttbar{P4}{2}{2} \\
+                \ganttbar{P3}{3}{4} \\
+                \ganttbar{P5}{5}{9} \\
+                \ganttbar{P1}{10}{19} \\
+            \end{ganttchart}
+            \end{center}
+            
+            \item nonpreemptive priority:
+
+            \begin{center}
+            \begin{ganttchart}{1}{19}
+                \gantttitle{Time}{19} \\
+                \gantttitlelist{1,...,19}{1} \\
+                \ganttbar{P1}{1}{10} \\
+                \ganttbar{P2}{11}{11} \\
+                \ganttbar{P5}{12}{16} \\
+                \ganttbar{P3}{17}{18} \\
+                \ganttbar{P4}{19}{19} \\
+            \end{ganttchart}
+            \end{center}
+                        
+            \item RR (quantum = 1):
+            
+            \begin{center}
+            \begin{ganttchart}{1}{19}
+                \gantttitle{Time}{19} \\
+                \gantttitlelist{1,...,19}{1} \\
+                
+                \ganttbar{P1}{1}{1} 
+                \ganttbar{}{6}{6} 
+                \ganttbar{}{9}{9}
+                \ganttbar{}{11}{11}
+                \ganttbar{}{13}{13}
+                \ganttbar{}{15}{19}
+                \ganttnewline
+                \ganttbar{P2}{2}{2}
+                \ganttnewline
+                \ganttbar{P3}{3}{3} 
+                \ganttbar{}{7}{7} 
+                \ganttnewline
+                \ganttbar{P4}{4}{4}
+                \ganttnewline
+                \ganttbar{P5}{5}{5} 
+                \ganttbar{}{8}{8}
+                \ganttbar{}{10}{10}
+                \ganttbar{}{12}{12}
+                \ganttbar{}{14}{14}
+            \end{ganttchart}
+            \end{center}
+
+        \end{itemize}
+        
+        \item What is the turnaround time of each process for each of the scheduling algorithms in part a?
+        
+        \begin{itemize}
+            \item FCFS:
+            
+            \begin{center}
+            \begin{tabular}{|c|c|}
+                \hline
+                Process & Turnaround Time \\
+                \hline
+                P1 & 10 \\
+                \hline
+                P2 & 11 \\
+                \hline
+                P3 & 13 \\
+                \hline
+                P4 & 14 \\
+                \hline
+                P5 & 19 \\
+                \hline
+            \end{tabular}
+            \end{center}
+            
+            \item SJF:
+
+            \begin{center}
+            \begin{tabular}{|c|c|}
+                \hline
+                Process & Turnaround Time \\
+                \hline
+                P1 & 19 \\
+                \hline
+                P2 & 1 \\
+                \hline
+                P3 & 4 \\
+                \hline
+                P4 & 2 \\
+                \hline
+                P5 & 9 \\
+                \hline
+            \end{tabular}
+            \end{center}
+                        
+            \item nonpreemptive priority:
+            
+            \begin{center}
+            \begin{tabular}{|c|c|}
+                \hline
+                Process & Turnaround Time \\
+                \hline
+                P1 & 10 \\
+                \hline
+                P2 & 11 \\
+                \hline
+                P3 & 18 \\
+                \hline
+                P4 & 19 \\
+                \hline
+                P5 & 16 \\
+                \hline
+            \end{tabular}
+            \end{center}
+            
+            \item RR:
+            
+            \begin{center}
+            \begin{tabular}{|c|c|}
+                \hline
+                Process & Turnaround Time \\
+                \hline
+                P1 & 19 \\
+                \hline
+                P2 & 2 \\
+                \hline
+                P3 & 7 \\
+                \hline
+                P4 & 4 \\
+                \hline
+                P5 & 14 \\
+                \hline
+            \end{tabular}
+            \end{center}
+
+        \end{itemize}
+        
+        \item What is the waiting time of each process for each of the scheduling algorithms in part a?
+        
+        \begin{itemize}
+            \item FCFS:
+            
+            \begin{center}
+            \begin{tabular}{|c|c|}
+                \hline
+                Process & Waiting Time \\
+                \hline
+                P1 & 0 \\
+                \hline
+                P2 & 10 \\
+                \hline
+                P3 & 11 \\
+                \hline
+                P4 & 13 \\
+                \hline
+                P5 & 14 \\
+                \hline
+            \end{tabular}
+            \end{center}
+
+            \item SJF:
+
+            \begin{center}
+            \begin{tabular}{|c|c|}
+                \hline
+                Process & Waiting Time \\
+                \hline
+                P1 & 9 \\
+                \hline
+                P2 & 0 \\
+                \hline
+                P3 & 2 \\
+                \hline
+                P4 & 1 \\
+                \hline
+                P5 & 4 \\
+                \hline
+            \end{tabular}
+            \end{center}
+            
+            \item nonpreemptive priority:
+            
+            \begin{center}
+            \begin{tabular}{|c|c|}
+                \hline
+                Process & Waiting Time \\
+                \hline
+                P1 & 0 \\
+                \hline
+                P2 & 10 \\
+                \hline
+                P3 & 16 \\
+                \hline
+                P4 & 18 \\
+                \hline
+                P5 & 11 \\
+                \hline
+            \end{tabular}
+            \end{center}
+            
+            \item RR:
+            
+            \begin{center}
+            \begin{tabular}{|c|c|}
+                \hline
+                Process & Waiting Time \\
+                \hline
+                P1 & 9 \\
+                \hline
+                P2 & 1 \\
+                \hline
+                P3 & 5 \\
+                \hline
+                P4 & 3 \\
+                \hline
+                P5 & 9 \\
+                \hline
+            \end{tabular}
+            \end{center}
+            
+        \end{itemize}
+        
+        \item Which of the algorithms in part a results in the minimum average waiting time (over all processes)?
+        
+        \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline
+            Algorithm & Average Waiting Time \\
+            \hline
+            FCFS & 9.6 \\
+            \hline
+            SJF(nonpreemptive) & 9.4 \\
+            \hline
+            SJF(preemptive) & 3.2 \\
+            \hline
+            nonpreemptive priority & 11 \\
+            \hline
+            RR & 5.4 \\
+            \hline
+        \end{tabular}
+        \end{center}
+    \end{enumerate}
+
+    \item Which of the following scheduling algorithms could result in starvation?
+    
+    \begin{enumerate}
+        \item First-come, first-served
+        \item Shortest job first
+        \item Round robin
+        \item Priority
+    \end{enumerate}
+    
+    b and d.
+    
+    \item The traditional UNIX scheduler enforces an inverse relationship between priority numbers and priorities: The higher the number, the lower the priority. The scheduler recalculates process priorities once per second using the following function: 
+    
+    Priority = (Recent CPU usage / 2) + Base
+    
+    where base = 60 and recent CPU usage refers to a value indicating how often a process has used the CPU since priorities were last recalculated. Assume that recent CPU usage for process P1 is 40, process P2 is 18, and process P3 is 10. What will be the new priorities for these three processes when priorities are recalculated? Based on this information, does the traditional UNIX scheduler raise or lower the relative priority of a CPU-bound process?
+    
+    When priorities are recalculated:
+    
+    \begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        Process & CPU usage & New Priority \\
+        \hline
+        P1 & 40 & 80 \\
+        \hline
+        P2 & 18 & 69 \\
+        \hline
+        P3 & 10 & 65 \\
+        \hline
+    \end{tabular}
+    \end{center}
+    
+    the traditional UNIX scheduler does \textbf{not} raise or lower the relative priority of a CPU-bound process.
+
+\end{enumerate}

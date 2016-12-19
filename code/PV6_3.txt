@@ -1,0 +1,31 @@
+semaphore Dmutex = 1;
+semaphore SCount = 0, Paper = 0, Submission = 0;
+
+teacher:
+begin
+  P(Dmutex);
+  V(Dmutex);
+
+  P(SCount, N);
+  V(SCount, N);
+  V(Paper, N);
+  P(Submission, N);
+
+  P(Dmutex);
+  V(Dmutex);  
+end
+
+student:
+begin
+  P(Dmutex);
+  V(SCount);
+  V(Dmutex);
+  
+  P(Paper);
+  test;
+  V(Submission);
+  
+  P(Dmutex);
+  P(SCount);
+  V(Dmutex);  
+end

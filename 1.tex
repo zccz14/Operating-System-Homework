@@ -1,0 +1,80 @@
+\chapter{Introduction}
+
+\begin{enumerate}
+    \item What is the main advantage of multiprogramming?
+    
+    Increasing CPU utilization by dispatching works.
+    
+    \item Define the essential properties of the following types of operating systems:
+    
+    \begin{enumerate}
+        \item Batch
+        
+        import several jobs and continually run them.
+        
+        \item Interactive
+        
+        support online user operation by I/O devices.
+        
+        \item Time Sharing
+        
+        several users or processes share system resource by time.
+        
+        \item Real time
+        
+        short latency, swift switch, high real-time availability.
+        
+        \item Network
+        
+        processes commucate by network
+        
+        \item Distributed 
+        
+        abstract logical model, decouple from physical components
+    
+    \end{enumerate}
+    
+    \item Consider the various definition of operating system. Consider whether the operating system should include applications such as web browsers and mail programs. Argue both that it should and that it should not, and support your answer.
+    
+    \begin{enumerate}
+        \item Operating system \textbf{should} include general applications.
+        
+        \begin{enumerate}
+            \item It's hard to say an application that is absolutely a system application or a general application. (system applications such as \textit{.NET Framework} in Windows) (definition)
+    
+            \item It makes the operating system much easier to use. Nobody wants to view webpage by `curl`. (user-friendly)
+    
+        \end{enumerate}
+        
+        \item Operating system \textbf{should not} include general applications.
+        
+        General applications are not necessary for operating system. General applications help user working. But operating system should not assume which application users work with. User could choose applications themselves. (for a clean OS)        
+    \end{enumerate}
+
+\end{enumerate}
+
+\chapter{OS Structures}
+
+\begin{enumerate}
+    \item What is the purpose of system calls?
+    
+    Providing the interactive interface between a running program and the operating system.
+
+    \item What is the main advantage of the layered approach to system design?
+    
+    \begin{enumerate}
+        \item Serapating layer and layer is convenient to extend functions.
+        \item Decouple between layers.
+        \item Simply Requirements. (like a DAG)
+    \end{enumerate}
+
+    \item What is the main advantage of the microkernel approach to system design?
+    
+    \begin{enumerate}
+        \item Easy to extend.
+        \item More reliable.
+        \item Distributed calculations by Remote Procedure Call (sending requests).
+    \end{enumerate}
+    
+\end{enumerate}
+

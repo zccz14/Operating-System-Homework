@@ -1,0 +1,34 @@
+semaphore Wmutex = 1, WRmutex = 1;
+semaphore mutex1 = 1, mutex2 = 1;
+int RCount = 0, WCount = 0;
+
+writer:
+begin
+  P(mutex1);
+  if (WCount++ == 0) P(WRMutex);
+  V(mutex1);
+
+  P(Wmutex);
+  write;
+  V(Wmutex);
+
+  P(mutex1);
+  if (--WCount == 0) V(WRMutex);
+  V(mutex1);
+end
+
+reader:
+begin
+  P(mutex1);
+  V(mutex1);
+
+  P(mutex2);
+    if (RCount++ == 0) P(WRmutex);
+  V(mutex2);
+
+  read;
+
+  P(mutex2);
+    if (--Rcount == 0) V(WRmutex);
+  V(mutex2);
+end

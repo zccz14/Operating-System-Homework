@@ -1,0 +1,69 @@
+\documentclass{report}
+\usepackage{subfiles}
+\usepackage[utf8]{inputenc}
+
+\usepackage{geometry}
+\geometry{
+  a4paper,
+  total={170mm,257mm},
+  left=20mm,
+  top=20mm
+}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+ 
+\urlstyle{same}
+\usepackage{afterpage}
+\newcommand \blankpage{
+    \null
+    \thispagestyle{empty}
+    \addtocounter{page}{-1}
+    \newpage
+}
+
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily, numbers=left}
+
+\usepackage{minted}
+\usepackage{amsmath}
+\usepackage{pgfgantt}
+
+\title{Operating System Homework}
+\author{Zheng Chen \\ Stu. No. 2141601026 \\ XJTUSE 42}
+\date{December 2016}
+
+\begin{document}
+
+\maketitle
+
+\afterpage{\blankpage}
+
+%\tableofcontents
+
+%\afterpage{\blankpage}
+
+%\part{Homework 1}
+%\subfile{1.tex}
+
+%\part{Homework 2}
+%\subfile{2.tex}
+
+%\part{Homework 3}
+\subfile{3.tex}
+
+%\part{Homework 4}
+%\subfile{4.tex}
+
+%\part{Homework 5}
+%\subfile{5.tex}
+
+%\part{Appendix}
+%\listoflistings
+
+
+\end{document}

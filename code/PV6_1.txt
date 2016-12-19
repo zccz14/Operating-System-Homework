@@ -1,0 +1,9 @@
+P(s):
+  s := s-1;
+  if s < 0 then 
+    push the process into the tail of the corresponding waiting queue;
+V(s):
+  s := s + 1;
+  if s <= 0 then
+    pop a process P from the tail of the corresponding waiting queue;
+    push P into ready queue;

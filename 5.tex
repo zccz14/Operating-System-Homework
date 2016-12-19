@@ -1,0 +1,115 @@
+\chapter{File System}
+
+\begin{enumerate}
+    \item [10.1] Consider a file system where a file can be deleted and its disk space reclaimed while links to that file still exist. What problems may occur if a new file is created in the same storage area or with the same absolute path name? How can these problems be avoided?
+    
+    There is an unexpected way to access the new file through the links to the old file.
+    
+    Take microsoft windows for example, most of links are logical links called \textit{shortcut}, which links to a logical file name. Redirect technique was used for logical-level file linking. When access the links linking to deleted files, we would be redirected to another logical filename and finally get an error——\textit{"the target was moved or deleted"}. If the new file was stored with the same absolute path name, we can access the new file by the undeleted \textit{shortcut}.
+    
+    \textbf{To ensure that all the links are deleted before the corresponding disk space being reclaimed} is the \textbf{only} way to avoid the misleading link problem \footnotemark thoroughly.
+    
+    \footnotetext{But we hope the links still exist and automatically link to the new file in some cases. To avoid the problem by using a good naming style is more effective.}
+    
+    \item [11.1] Consider a file system that uses a modified contiguous-allocation scheme with support for extents. A file is a collection of extents, with each extent corresponding to a contiguous set of blocks. A key issue in such system is the degree of variability in the size of the extents. What are the advantages and disadvantages of the following schemes?
+    
+    \begin{enumerate}
+        \item All extents are of the same size, and the size is predetermined.
+        
+        Lowest complexity and lowest flexibility.
+        
+        \item Extents can be of any size and are allocated dynamically.
+        
+        Highest complexity and highest flexibility.
+        
+        \item Extents can be of a few fixed sizes, and these sizes are predetermined.
+        
+        Intermediate complexity and intermediate flexibility.
+    \end{enumerate}
+    
+    Higher flexibility indicates higher complexity with more difficult implementation and higher preprocess cost.
+
+    \item [11.2] What are the advantages of the variant of linked allocation that uses a FAT to chain together the blocks of a file?
+    
+    FAT is much fewer than the whole disk, so FAT can be well cached in memory. When we access the middle of a file record, we can lookup the FAT and find the related block number, and then directly access the corresponding block in the disk. In contrast to traversing block in the disk, using FAT saved a lot of disk-access time.
+
+    \item [11.3] Consider a system where free space is kept in a free-space list.
+    
+    \begin{enumerate}
+        \item Consider a file system similar to the one used by UNIX with indexed allocation. How many disk I/O operations might be required to read the contents of a small local file at /a/b/c? Assume that none of the disk blocks is currently being cached.
+        
+        Reading the contents of the small local file at /a/b/c need 4 disk I/O operations.
+        
+        \begin{enumerate}
+            \item Reading / (the root directory)
+            \item Reading /a
+            \item Reading /a/b
+            \item Reading /a/b/c
+        \end{enumerate}
+        
+        \item Suggest a scheme to ensure that the pointer to the free space list is never lost as a result of memory failure.
+        
+        Store the free-space list pointer in a stable storage, such as a disk, perhaps in RAID \footnotemark.
+        
+        \footnotetext{Why not try using offsite disaster recovery technology? :)}
+        
+    \end{enumerate}
+\end{enumerate}
+
+\chapter{I/O System}
+
+
+\chapter{Secondary Storage}
+
+\begin{enumerate}
+    \item [12.2] Suppose that a disk drive has 5,000 cylinders, numbered 0 to 4999. The drive is currently serving a request at cylinder 143, and the previous request was at cylinder 125. The queue of pending requests, in FIFO order, is:
+    
+         86, 1470, 913, 1774, 948, 1509, 1022, 1750, 130
+    
+    Starting from the current head position, what is the total distance (in cylinders) that the disk arm moves to satisfy all the pending requests for each of the following disk-scheduling algorithms?
+    \begin{itemize}
+        \item FCFS
+        
+        \begin{equation*}
+            \begin{split}
+                \text{Total Distance} 
+                 = & |143 - 86| + |86 - 1470| + |1470 - 913| \\
+                   & + |913 - 1774| + |1774 - 948| + |948 - 1509| \\
+                   & + |1509 - 1022| + |1022 - 1750| + |1750 - 130| \\
+                 = & 7081 \text{(Cylinders)}
+            \end{split}
+        \end{equation*}
+
+        \item SSTF
+        
+        $$
+        \text{Total Distance} = |143 - 86| + |1774 - 86| = 1745 \text{(Cylinders)}
+        $$
+        
+        \item SCAN
+
+        $$
+        \text{Total Distance} = |143 - 4999| + |4999 - 86| = 9769 \text{(Cylinders)}
+        $$
+        
+        
+        \item LOOK
+        
+        $$
+        \text{Total Distance} = |143 - 1774| + |1774 - 86| = 3319 \text{(Cylinders)}
+        $$
+        
+        \item C-SCAN
+        
+        $$
+        \text{Total Distance} = |143 - 4999| + |4999 - 0| + |0 - 130| = 9985 \text{(Cylinders)}
+        $$
+        
+        \item C-LOOK
+        
+        $$
+        \text{Total Distance} = |143 - 1774| + |1774 - 86| + |86 - 130| = 3363 \text{(Cylinders)}
+        $$
+        
+    \end{itemize}
+\end{enumerate}

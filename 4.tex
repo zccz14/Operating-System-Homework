@@ -1,0 +1,189 @@
+\chapter{Memory Management}
+
+\begin{enumerate}
+    \item [8.1] Explain the difference between internal and external fragmentation.
+    
+    They are both waste of memory. Internal fragmentation is from allocated aligned memory blocks. Allocating aligned memory blocks is convenient for OS, while it brings internal fragmentation. External fragmentation is from the arrangement problem. OS can use the whole memory to satisfy a memory allocating request. External fragmentation will accumulate while memory allocating and free. OS could rearrange programs to reduce external fragmentation, but there is no way to reduce internal fragmentation.
+    
+    \item [8.3] Given five memory partitions of 100KB, 500KB, 200KB, 300KB, and 600KB (in order), how would each of the first-fit, best-fit, and worst-fit algorithms place processes of 212KB, 417KB, 112KB, and 426KB (in order)? Which algorithm makes the most efficient use of memory?
+    
+    \begin{enumerate}
+        \item [first-fit] 
+        
+        \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \multicolumn{5}{|c|}{memory partition (KB)} & Note \\
+        \hline
+        100 & 500 & 200 & 300 & 600 & initial state \\
+        \hline
+        100 & 288 & 200 & 300 & 600 & allocated 212KB \\
+        \hline
+        100 & 288 & 200 & 300 & 183 & allocated 417KB \\
+        \hline
+        100 & 176 & 200 & 300 & 183 & allocated 112KB \\
+        \hline
+        100 & 176 & 200 & 300 & 183 & allocating 426KB, failed \\
+        \hline
+        \end{tabular}
+        
+        \item [best-fit]
+        
+        \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \multicolumn{5}{|c|}{memory partition (KB)} & Note\\
+        \hline
+        100 & 500 & 200 & 300 & 600 & initial state \\
+        \hline
+        100 & 500 & 200 & 88 & 600 & allocated 212KB \\
+        \hline
+        100 & 83 & 200 & 88 & 600 & allocated 417KB \\
+        \hline
+        100 & 83 & 88 & 88 & 600 & allocated 112KB \\
+        \hline
+        100 & 83 & 88 & 88 & 174 & allocated 426KB \\        
+        \hline
+        \end{tabular}
+        
+        \item [worst-fit]
+        
+        \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        \multicolumn{5}{|c|}{memory partition (KB)} & Note \\
+        \hline
+        100 & 500 & 200 & 300 & 600 & initial state \\
+        \hline
+        100 & 500 & 200 & 300 & 388 & allocated 212KB \\
+        \hline
+        100 & 83 & 200 & 300 & 388 & allocated 417KB \\
+        \hline
+        100 & 83 & 200 & 300 & 276 & allocated 112KB \\
+        \hline
+        100 & 83 & 200 & 300 & 276 & allocating 426KB, failed \\        
+        \hline
+        \end{tabular}
+            
+    \end{enumerate}
+    
+    Obviously the \textbf{best-fit} algorithm makes the most efficient use of memory.
+    
+    \item [8.9] Consider a paging system with the page table stored in memory.
+    
+    \begin{enumerate}
+        \item If a memory reference takes 200 nanoseconds, how long does a paged memory reference take?
+        
+        In this scheme every data/instruction access requires two memory accesses.
+        
+        $$ T = 2 \times 200 \text{ns} = 400 \text{ns} $$
+        
+        \item If we add TLBs, and 75 percent of all page-table reference are found in the TLBs, what is the effective memory reference time? (Assume that finding a page-table entry in the TLBs takes zero time, if the entry is there)
+        
+        $$ T = 200 \text{ns} \times ( 1 \times 75 \% + 2 \times 25\%) = 250 \text{ns} $$
+        
+    \end{enumerate}
+    
+    \item [8.12] Consider the following segment table:
+    
+    \begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        Segment & Base & Length \\
+        \hline
+        0 & 219 & 600 \\
+        \hline
+        1 & 2300 & 14 \\
+        \hline
+        2 & 90 & 100 \\
+        \hline
+        3 & 1327 & 580 \\
+        \hline
+        4 & 1952 & 96 \\
+        \hline
+    \end{tabular}
+    \end{center}
+    
+    What are the physical addresses for the following logical addresses?
+    
+    $$ A_p = Base + A_l, (A_l < Length) $$
+    
+    \begin{enumerate}
+        \item 0, 430
+        
+        $$ A_p = 219 + 430 = 649 $$
+        
+        \item 1, 10
+        
+        $$ A_p = 2300 + 10 = 2310 $$
+        
+        \item 2, 500
+        
+        $$ A_p = 90 + 500 = 590 , \text{(Illegal)} $$ 
+        
+        \item 3, 400
+        
+        $$ A_p = 1327 + 400 = 1727 $$
+        
+        \item 4, 112
+        
+        $$ A_p = 1952 + 96 = 2048 $$
+        
+    \end{enumerate}
+    
+\end{enumerate}
+
+\chapter{Virtual Memory}
+
+\begin{enumerate}
+    \item [9.4] A certain computer provides its users with a virtual-memory space of $2^{32}$ bytes. The computer has $2^{18}$ bytes of physical memory. The virtual memory is implemented by paging, and the page size is 4,096 bytes. A user process generates the virtual address 11123456. Explain how the system establishes the corresponding physical location. Distinguish between software and hardware operations.
+    
+    
+    
+    \item [9.10] Consider a demand-paging system with the following time-measured utilization:
+    
+    \begin{center}
+        \begin{tabular}{|c|c|}
+            \hline
+            CPU utilization & 20\% \\
+            \hline
+            Paging disk & 97.7\% \\
+            \hline
+            Other I/O devices & 5\% \\
+            \hline
+        \end{tabular}
+    \end{center}
+    
+    For each of the following, say whether it will (or is likely to) improve CPU utilization. Explain your answer.
+    
+    \begin{enumerate}
+        \item Install a faster CPU.
+        \item Install a bigger paging disk.
+        \item Increase the degree of multiprogramming.
+        \item Decrease the degree of multiprogramming.
+        \item Install more main memory.
+        \item Install a faster hard dist or multiple controllers with multiple hard disks.
+        \item Add prepaging to the page-fetch algorithms.
+        \item Increase the page size.
+    \end{enumerate}
+    
+    \item [9.13] A page-replacement algorithm should minimize the number of page faults. We can achieve this minimization by distributing heavily used pages evenly over all of memory, rather than having them compete for a small number of page frames. We can associate with each page frame a counter of the number of pages associated with that frame. Then, to replace a page, we can search for the page frame with the smallest counter.
+    
+    \begin{enumerate}
+        \item Define a page-replacement algorithm using this basic idea. Specifically address these problems:
+        
+        \begin{enumerate}
+            \item What the initial value of the counters is?
+            \item When counters are increased?
+            \item When counters are decreased?
+            \item How the page to be replaced is selected?
+        \end{enumerate}
+        
+        \item How many page faults occur for your algorithm for the following reference string, with four page frames?
+        
+        \begin{center}
+            1, 2, 3, 4, 5, 3, 4, 1, 6, 7, 8, 7, 8, 9, 7, 8, 9, 5, 4, 5, 4, 2
+        \end{center}
+        
+        \item What is the minimum number of page faults for an optimal page-replacement strategy for the reference string in part b with four frames?
+        
+    \end{enumerate}
+    
+\end{enumerate}
